@@ -7,7 +7,6 @@
           (for-syntax
            racket/syntax
            syntax/parse)
-          net/base64
           )
 (require racket/trace)
 (provide (all-defined-out))
@@ -189,7 +188,7 @@ http://www.plantuml.com/plantuml/uml/VPA_ReCm4CRtUmhBKpiWXBj6KVgdGzkbOze56RWaLem
         result)))
 
 (module+ test
-  (require rackunit base64)
+  (require rackunit )
   (check-equal? "e" (index-key->string '()))
   (check-equal? "(1 2)" (index-key->string '(1 2)))
   (check-equal? "btrue" (index-key->string #t))
