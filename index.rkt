@@ -37,7 +37,7 @@ http://www.plantuml.com/plantuml/uml/VPA_ReCm4CRtUmhBKpiWXBj6KVgdGzkbOze56RWaLem
                                     (struct-persist->path:dir v)) "/" "%")]
     [else                         (raise-argument-error 'v "value" v)]))
 (module+ test
-  (require rackunit base64)
+  (require rackunit )
   (check-equal? "e" (index-key->string '()))
   (check-equal? "(1 2)" (index-key->string '(1 2)))
   (check-equal? "btrue" (index-key->string #t))
@@ -128,26 +128,26 @@ http://www.plantuml.com/plantuml/uml/VPA_ReCm4CRtUmhBKpiWXBj6KVgdGzkbOze56RWaLem
          [struct-idx-file     (build-path struct-idx-dir "index")])
 
     (when (file-exists? struct-idx-file)
-      (call-with-input-file struct-idx-file 
+      (call-with-input-file struct-idx-file
         (lambda (in)
           (let loop ([file (read-line in)])
             (unless (eof-object? file)
               (when (file-exists? file) (delete-file file))
               (loop (read-line in)))))))))
-  
+
 
 #|
-(define (index-search-term term index-name [fail-result undefined]) 
+(define (index-search-term term index-name [fail-result undefined])
   (let* ([key   (index-key->string term)])
     (hash-ref index-name key fail-result)))
 |#
 
-(define (index-ref  
+(define (index-ref
          #:directory struct-directory
          #:index index-name
          #:store store
          term [fail-result undefined])
- 
+
   (index-key-ref  #:directory struct-directory
                   #:index     index-name
                   #:store store
