@@ -66,7 +66,7 @@
 (define (struct-type->path:dir s)
   (let* ([info       (struct/persistent-info-ref s)]
          [directory  (struct-persistent-info-directory (info))])
-    (build-path directory )))
+    (build-path (directory) )))
 
 (define (file->struct-persist latest)
   (define (reader-data data)

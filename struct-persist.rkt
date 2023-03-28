@@ -85,18 +85,18 @@
           ;(PARAM-MUTATOR )
 
           (define (SEEK-ID*  ) (index-keys
-                                #:directory STRUCT-DIRECTORY
+                                #:directory (STRUCT-DIRECTORY)
                                 #:index INDEX-FIELD-NAME))
           (define (SEEK-ID? proceduce value  #:unique [unique #f])
             (index-compare #:store STORE
-                           #:directory STRUCT-DIRECTORY
+                           #:directory (STRUCT-DIRECTORY)
                            #:index INDEX-FIELD-NAME
                            #:unique unique proceduce value))
 
           (define (SEEK-ID% filter  #:unique [unique #f] )
             (index-filter
              #:store STORE
-             #:directory STRUCT-DIRECTORY
+             #:directory (STRUCT-DIRECTORY)
              #:index INDEX-FIELD-NAME
              #:unique unique filter))
 
@@ -110,7 +110,7 @@
           (define (SEEK-STRUCTS value)
             (index-ref
              #:store STORE
-             #:directory STRUCT-DIRECTORY
+             #:directory (STRUCT-DIRECTORY)
              #:index INDEX-FIELD-NAME
              value)))))
 
@@ -296,12 +296,12 @@
      #`(begin
 
          (define STRUCT-DIRECTORY
-           (build-path
+           (make-parameter (build-path
             (let ([dir (syntax-source-directory #'STRUCT-TYPE)])
               (if (false? dir)
                   (make-temporary-file "rkttmp~a" 'directory)
                   dir))
-            (~a "~" (symbol->string 'PLURAL)) ))
+            (~a "~" (symbol->string 'PLURAL)) )))
          (define STRUCT-CHANNEL   (make-async-channel))
 
          (begin INDEXES ...)
@@ -434,7 +434,7 @@
 
          (provide CTOR-KW-ID)
          (define (SEEK-BY-ID id [fail-result undefined])
-           (struct-persist-id->struct-persist  #:store STORE STRUCT-DIRECTORY id undefined))
+           (struct-persist-id->struct-persist  #:store STORE (STRUCT-DIRECTORY) id undefined))
          (provide SEEK-BY-ID)
 
          (define (REMOVE-BY-ID s)
@@ -442,11 +442,11 @@
 
          (provide REMOVE-BY-ID)
          (define (ALL-IDS)
-           (struct-persist-all-ids STRUCT-DIRECTORY))
+           (struct-persist-all-ids (STRUCT-DIRECTORY)))
 
          (provide ALL-IDS)
          (define (TOTAL)
-           (struct-persist-count STRUCT-DIRECTORY))
+           (struct-persist-count (STRUCT-DIRECTORY)))
          (provide TOTAL)
 
          (define (SEEK-ALL #:offset [Offset 0] #:limit [Limit (TOTAL)])
@@ -456,7 +456,7 @@
          (define (TAKE-DROP a-list #:map [a-map (λ (a) a)]
                                    #:offset [Offset 0]
                                    #:limit [Limit (TOTAL)])
-           (let* ([~count           (struct-persist-count STRUCT-DIRECTORY)]
+           (let* ([~count           (struct-persist-count (STRUCT-DIRECTORY))]
                   [Limit            (if (> Limit ~count ) ~count  Limit)]
                   [Offset           (if (> Offset ~count) ~count Offset )]
                   [drop-list        (drop  a-list Offset)]
